@@ -1,0 +1,19 @@
+node {
+    
+   def service_name = "userservice"
+
+   stage 'Checkout'
+
+      checkout scm
+
+   stage "Build"
+
+      sh './dockerBuild.sh composeForDebug'
+
+      def service = docker.build "${service_name}"
+
+   stage "Publish"
+    
+      service.push 'latest'
+      service.push "${commit_id}"
+}
